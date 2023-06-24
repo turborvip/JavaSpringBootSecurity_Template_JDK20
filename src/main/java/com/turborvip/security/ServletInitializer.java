@@ -1,4 +1,4 @@
-package security.turborvip.security;
+package com.turborvip.security;
 
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;

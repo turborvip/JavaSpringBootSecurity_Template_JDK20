@@ -1,4 +1,4 @@
-package doctintuc.com.websitedoctintuc.application.constants;
+package com.turborvip.security.application.constants;
 
 public class DevMessageConstant {
 

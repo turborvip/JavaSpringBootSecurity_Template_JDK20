@@ -1,7 +1,8 @@
-package doctintuc.com.websitedoctintuc.domain.pagine;
+package com.turborvip.security.domain.pagination;
 
-import lombok.*;
-import org.springframework.data.domain.Page;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 

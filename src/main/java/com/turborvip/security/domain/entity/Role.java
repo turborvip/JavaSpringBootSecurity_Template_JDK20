@@ -1,22 +1,24 @@
-package doctintuc.com.websitedoctintuc.domain.entity;
+package com.turborvip.security.domain.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import doctintuc.com.websitedoctintuc.application.constants.EnumRole;
-import doctintuc.com.websitedoctintuc.domain.entity.base.AbstractBase;
+import com.turborvip.security.application.constants.EnumRole;
+import com.turborvip.security.domain.entity.base.AbstractBase;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
-import javax.persistence.*;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
 
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 @Table(name = "roles")
 @Entity
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -26,7 +28,18 @@ public class Role extends AbstractBase {
     @Column(name = "role_name")
     private EnumRole roleName;
 
-    @OneToMany(mappedBy = "role" , cascade = CascadeType.MERGE)
-    @JsonIgnoreProperties("role")
-    private List<User> users;
+    @ManyToMany(mappedBy = "roles", cascade = {CascadeType.DETACH, CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE})
+    @Fetch(value = FetchMode.SELECT)
+    @JsonInclude
+    private Set<User> users = new HashSet<>();
+
+
+    public Role(Long id, EnumRole enumRole) {
+        this.id = id;
+        this.roleName = EnumRole.valueOf(enumRole.name());
+    }
+
+    public Role(EnumRole enumRole) {
+        this.roleName = EnumRole.valueOf(enumRole.name());
+    }
 }

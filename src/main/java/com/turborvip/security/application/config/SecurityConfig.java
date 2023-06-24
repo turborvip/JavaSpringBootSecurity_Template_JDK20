@@ -1,4 +1,4 @@
-package com.turborvip.security.configuration;
+package com.turborvip.security.application.config;
 
 import com.turborvip.security.application.constants.EnumRole;
 import lombok.RequiredArgsConstructor;
@@ -29,8 +29,9 @@ public class SecurityConfig {
         http.sessionManagement().sessionCreationPolicy(STATELESS);
         http.authorizeRequests()
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                .requestMatchers("/auth/v1/auth").permitAll()
-                .requestMatchers("demo-auth").hasAnyAuthority(EnumRole.ROLE_USER.toString())
+                .requestMatchers("/api/v1/both/test").permitAll()
+                .requestMatchers("/api/v1/auth/**").permitAll()
+                .requestMatchers("/api/v1/demo-auth").hasAnyAuthority(EnumRole.ROLE_USER.toString())
                 .and()
                 .csrf().disable()
                 .authorizeRequests()

@@ -1,4 +1,4 @@
-package com.turborvip.manytomany.configuration;
+package com.turborvip.security.configuration;
 
 import jakarta.persistence.EntityManagerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,12 +22,12 @@ import java.util.Properties;
 @Configuration
 @EnableTransactionManagement
 @PropertySource({
-        "classpath:database.properties"
+        "classpath:application.properties"
 })
 @ComponentScan({
-        "com.turborvip.manytomany"
+        "com.turborvip.security"
 })
-@EnableJpaRepositories(basePackages = "com.turborvip.manytomany.repositories")
+@EnableJpaRepositories(basePackages = "com.turborvip.security.application.repositories")
 public class Persistence {
 
     @Autowired
@@ -42,7 +42,7 @@ public class Persistence {
         final LocalContainerEntityManagerFactoryBean entityManagerFactoryBean = new LocalContainerEntityManagerFactoryBean();
         entityManagerFactoryBean.setDataSource(dataSource());
         entityManagerFactoryBean.setPackagesToScan(new String[]{
-                "com.turborvip.manytomany.models"
+                "com.turborvip.security.domain.entity"
         });
 
         final HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
@@ -56,6 +56,7 @@ public class Persistence {
         final Properties hibernateProperties = new Properties();
         hibernateProperties.setProperty("hibernate.hbm2ddl.auto", env.getProperty("hibernate.hbm2ddl.auto"));
         hibernateProperties.setProperty("hibernate.dialect", env.getProperty("hibernate.dialect"));
+        hibernateProperties.setProperty("hibernate.hbm2dll.create_namespaces",env.getProperty("hibernate.hbm2dll.create_namespaces"));
 //        hibernateProperties.setProperty("hibernate.cache.use_second_level_cache", env.getProperty("hibernate.cache.use_second_level_cache"));
 //        hibernateProperties.setProperty("hibernate.cache.use_query_cache", env.getProperty("hibernate.cache.use_query_cache"));
         // hibernateProperties.setProperty("hibernate.globally_quoted_identifiers", "true");
