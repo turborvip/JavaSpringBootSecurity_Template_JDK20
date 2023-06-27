@@ -1,0 +1,112 @@
+2023-06-27 18:02:27,348 [main] org.springframework.boot.StartupInfoLogger: Starting Application using Java 20.0.1 with PID 51738 (/home/turborvip/WorkPlace/Study/Java_Web/Spring-boot/JavaSpringBootSecurity/target/classes started by turborvip in /home/turborvip/WorkPlace/Study/Java_Web/Spring-boot/JavaSpringBootSecurity)
+2023-06-27 18:02:27,353 [main] org.springframework.boot.StartupInfoLogger: Running with Spring Boot v3.0.6, Spring v6.0.8
+2023-06-27 18:02:27,354 [main] org.springframework.boot.SpringApplication: No active profile set, falling back to 1 default profile: "default"
+2023-06-27 18:02:27,687 [main] org.springframework.data.repository.config.RepositoryConfigurationDelegate: Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2023-06-27 18:02:27,733 [main] org.springframework.data.repository.config.RepositoryConfigurationDelegate: Finished Spring Data repository scanning in 40 ms. Found 5 JPA repository interfaces.
+2023-06-27 18:02:28,066 [main] org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker: Bean 'persistence' of type [com.turborvip.security.application.configuration.Persistence$$SpringCGLIB$$0] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2023-06-27 18:02:28,313 [main] org.springframework.boot.web.embedded.tomcat.TomcatWebServer: Tomcat initialized with port(s): 8077 (http)
+2023-06-27 18:02:28,323 [main] org.apache.juli.logging.DirectJDKLog: Initializing ProtocolHandler ["http-nio-8077"]
+2023-06-27 18:02:28,324 [main] org.apache.juli.logging.DirectJDKLog: Starting service [Tomcat]
+2023-06-27 18:02:28,324 [main] org.apache.juli.logging.DirectJDKLog: Starting Servlet engine: [Apache Tomcat/10.1.8]
+2023-06-27 18:02:28,383 [main] org.apache.juli.logging.DirectJDKLog: Initializing Spring embedded WebApplicationContext
+2023-06-27 18:02:28,384 [main] org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext: Root WebApplicationContext: initialization completed in 1004 ms
+2023-06-27 18:02:28,413 [main] com.zaxxer.hikari.HikariConfig: Driver class org.postgresql.Driver found in Thread context class loader TomcatEmbeddedWebappClassLoader
+  context: ROOT
+  delegate: true
+----------> Parent Classloader:
+jdk.internal.loader.ClassLoaders$AppClassLoader@4e0e2f2a
+
+2023-06-27 18:02:28,416 [main] com.zaxxer.hikari.HikariConfig: DEVELOPER_CATALOG - idleTimeout has been set but has no effect because the pool is operating as a fixed size pool.
+2023-06-27 18:02:28,416 [main] com.zaxxer.hikari.HikariConfig: DEVELOPER_CATALOG - configuration:
+2023-06-27 18:02:28,419 [main] com.zaxxer.hikari.HikariConfig: allowPoolSuspension.............false
+2023-06-27 18:02:28,419 [main] com.zaxxer.hikari.HikariConfig: autoCommit......................true
+2023-06-27 18:02:28,420 [main] com.zaxxer.hikari.HikariConfig: catalog.........................none
+2023-06-27 18:02:28,420 [main] com.zaxxer.hikari.HikariConfig: connectionInitSql...............none
+2023-06-27 18:02:28,420 [main] com.zaxxer.hikari.HikariConfig: connectionTestQuery.............none
+2023-06-27 18:02:28,420 [main] com.zaxxer.hikari.HikariConfig: connectionTimeout...............50000
+2023-06-27 18:02:28,420 [main] com.zaxxer.hikari.HikariConfig: dataSource......................none
+2023-06-27 18:02:28,421 [main] com.zaxxer.hikari.HikariConfig: dataSourceClassName.............none
+2023-06-27 18:02:28,421 [main] com.zaxxer.hikari.HikariConfig: dataSourceJNDI..................none
+2023-06-27 18:02:28,421 [main] com.zaxxer.hikari.HikariConfig: dataSourceProperties............{password=<masked>}
+2023-06-27 18:02:28,422 [main] com.zaxxer.hikari.HikariConfig: driverClassName................."org.postgresql.Driver"
+2023-06-27 18:02:28,422 [main] com.zaxxer.hikari.HikariConfig: exceptionOverrideClassName......none
+2023-06-27 18:02:28,422 [main] com.zaxxer.hikari.HikariConfig: healthCheckProperties...........{}
+2023-06-27 18:02:28,422 [main] com.zaxxer.hikari.HikariConfig: healthCheckRegistry.............none
+2023-06-27 18:02:28,422 [main] com.zaxxer.hikari.HikariConfig: idleTimeout.....................300000
+2023-06-27 18:02:28,423 [main] com.zaxxer.hikari.HikariConfig: initializationFailTimeout.......1
+2023-06-27 18:02:28,423 [main] com.zaxxer.hikari.HikariConfig: isolateInternalQueries..........false
+2023-06-27 18:02:28,423 [main] com.zaxxer.hikari.HikariConfig: jdbcUrl.........................jdbc:postgresql://localhost:2345/security?createDatabaseIfNotExist=true
+2023-06-27 18:02:28,423 [main] com.zaxxer.hikari.HikariConfig: keepaliveTime...................0
+2023-06-27 18:02:28,423 [main] com.zaxxer.hikari.HikariConfig: leakDetectionThreshold..........0
+2023-06-27 18:02:28,423 [main] com.zaxxer.hikari.HikariConfig: maxLifetime.....................1800000
+2023-06-27 18:02:28,424 [main] com.zaxxer.hikari.HikariConfig: maximumPoolSize.................10
+2023-06-27 18:02:28,424 [main] com.zaxxer.hikari.HikariConfig: metricRegistry..................none
+2023-06-27 18:02:28,424 [main] com.zaxxer.hikari.HikariConfig: metricsTrackerFactory...........none
+2023-06-27 18:02:28,424 [main] com.zaxxer.hikari.HikariConfig: minimumIdle.....................10
+2023-06-27 18:02:28,424 [main] com.zaxxer.hikari.HikariConfig: password........................<masked>
+2023-06-27 18:02:28,424 [main] com.zaxxer.hikari.HikariConfig: poolName........................"DEVELOPER_CATALOG"
+2023-06-27 18:02:28,425 [main] com.zaxxer.hikari.HikariConfig: readOnly........................false
+2023-06-27 18:02:28,425 [main] com.zaxxer.hikari.HikariConfig: registerMbeans..................false
+2023-06-27 18:02:28,425 [main] com.zaxxer.hikari.HikariConfig: scheduledExecutor...............none
+2023-06-27 18:02:28,425 [main] com.zaxxer.hikari.HikariConfig: schema..........................none
+2023-06-27 18:02:28,425 [main] com.zaxxer.hikari.HikariConfig: threadFactory...................internal
+2023-06-27 18:02:28,425 [main] com.zaxxer.hikari.HikariConfig: transactionIsolation............default
+2023-06-27 18:02:28,426 [main] com.zaxxer.hikari.HikariConfig: username........................"turborvip"
+2023-06-27 18:02:28,426 [main] com.zaxxer.hikari.HikariConfig: validationTimeout...............5000
+2023-06-27 18:02:28,429 [main] com.zaxxer.hikari.HikariDataSource: DEVELOPER_CATALOG - Starting...
+2023-06-27 18:02:28,560 [main] com.zaxxer.hikari.pool.HikariPool: DEVELOPER_CATALOG - Added connection org.postgresql.jdbc.PgConnection@5df6163a
+2023-06-27 18:02:28,561 [main] com.zaxxer.hikari.HikariDataSource: DEVELOPER_CATALOG - Start completed.
+2023-06-27 18:02:28,562 [main] com.zaxxer.hikari.HikariConfig: DEVELOPER_CATALOG - idleTimeout has been set but has no effect because the pool is operating as a fixed size pool.
+2023-06-27 18:02:28,562 [main] com.zaxxer.hikari.HikariConfig: DEVELOPER_CATALOG - configuration:
+2023-06-27 18:02:28,562 [main] com.zaxxer.hikari.HikariConfig: allowPoolSuspension.............false
+2023-06-27 18:02:28,563 [main] com.zaxxer.hikari.HikariConfig: autoCommit......................true
+2023-06-27 18:02:28,563 [main] com.zaxxer.hikari.HikariConfig: catalog.........................none
+2023-06-27 18:02:28,563 [main] com.zaxxer.hikari.HikariConfig: connectionInitSql...............none
+2023-06-27 18:02:28,563 [main] com.zaxxer.hikari.HikariConfig: connectionTestQuery.............none
+2023-06-27 18:02:28,563 [main] com.zaxxer.hikari.HikariConfig: connectionTimeout...............50000
+2023-06-27 18:02:28,563 [main] com.zaxxer.hikari.HikariConfig: dataSource......................none
+2023-06-27 18:02:28,563 [main] com.zaxxer.hikari.HikariConfig: dataSourceClassName.............none
+2023-06-27 18:02:28,563 [main] com.zaxxer.hikari.HikariConfig: dataSourceJNDI..................none
+2023-06-27 18:02:28,564 [main] com.zaxxer.hikari.HikariConfig: dataSourceProperties............{password=<masked>}
+2023-06-27 18:02:28,564 [main] com.zaxxer.hikari.HikariConfig: driverClassName................."org.postgresql.Driver"
+2023-06-27 18:02:28,564 [main] com.zaxxer.hikari.HikariConfig: exceptionOverrideClassName......none
+2023-06-27 18:02:28,564 [main] com.zaxxer.hikari.HikariConfig: healthCheckProperties...........{}
+2023-06-27 18:02:28,564 [main] com.zaxxer.hikari.HikariConfig: healthCheckRegistry.............none
+2023-06-27 18:02:28,564 [main] com.zaxxer.hikari.HikariConfig: idleTimeout.....................300000
+2023-06-27 18:02:28,564 [main] com.zaxxer.hikari.HikariConfig: initializationFailTimeout.......1
+2023-06-27 18:02:28,565 [main] com.zaxxer.hikari.HikariConfig: isolateInternalQueries..........false
+2023-06-27 18:02:28,565 [main] com.zaxxer.hikari.HikariConfig: jdbcUrl.........................jdbc:postgresql://localhost:2345/security?createDatabaseIfNotExist=true
+2023-06-27 18:02:28,565 [main] com.zaxxer.hikari.HikariConfig: keepaliveTime...................0
+2023-06-27 18:02:28,565 [main] com.zaxxer.hikari.HikariConfig: leakDetectionThreshold..........0
+2023-06-27 18:02:28,565 [main] com.zaxxer.hikari.HikariConfig: maxLifetime.....................1800000
+2023-06-27 18:02:28,565 [main] com.zaxxer.hikari.HikariConfig: maximumPoolSize.................10
+2023-06-27 18:02:28,565 [main] com.zaxxer.hikari.HikariConfig: metricRegistry..................none
+2023-06-27 18:02:28,566 [main] com.zaxxer.hikari.HikariConfig: metricsTrackerFactory...........none
+2023-06-27 18:02:28,566 [main] com.zaxxer.hikari.HikariConfig: minimumIdle.....................10
+2023-06-27 18:02:28,566 [main] com.zaxxer.hikari.HikariConfig: password........................<masked>
+2023-06-27 18:02:28,566 [main] com.zaxxer.hikari.HikariConfig: poolName........................"DEVELOPER_CATALOG"
+2023-06-27 18:02:28,566 [main] com.zaxxer.hikari.HikariConfig: readOnly........................false
+2023-06-27 18:02:28,566 [main] com.zaxxer.hikari.HikariConfig: registerMbeans..................false
+2023-06-27 18:02:28,566 [main] com.zaxxer.hikari.HikariConfig: scheduledExecutor...............none
+2023-06-27 18:02:28,566 [main] com.zaxxer.hikari.HikariConfig: schema..........................none
+2023-06-27 18:02:28,566 [main] com.zaxxer.hikari.HikariConfig: threadFactory...................internal
+2023-06-27 18:02:28,567 [main] com.zaxxer.hikari.HikariConfig: transactionIsolation............default
+2023-06-27 18:02:28,567 [main] com.zaxxer.hikari.HikariConfig: username........................"turborvip"
+2023-06-27 18:02:28,567 [main] com.zaxxer.hikari.HikariConfig: validationTimeout...............5000
+2023-06-27 18:02:28,567 [main] com.zaxxer.hikari.HikariDataSource: DEVELOPER_CATALOG - Starting...
+2023-06-27 18:02:28,592 [main] com.zaxxer.hikari.pool.HikariPool: DEVELOPER_CATALOG - Added connection org.postgresql.jdbc.PgConnection@51ff3c4b
+2023-06-27 18:02:28,592 [main] com.zaxxer.hikari.HikariDataSource: DEVELOPER_CATALOG - Start completed.
+2023-06-27 18:02:28,628 [main] org.hibernate.jpa.internal.util.LogHelper: HHH000204: Processing PersistenceUnitInfo [name: default]
+2023-06-27 18:02:28,658 [main] org.hibernate.Version: HHH000412: Hibernate ORM core version 6.1.7.Final
+2023-06-27 18:02:28,893 [main] org.hibernate.engine.jdbc.dialect.internal.DialectFactoryImpl: HHH000400: Using dialect: org.hibernate.dialect.PostgresPlusDialect
+2023-06-27 18:02:29,519 [main] org.hibernate.engine.transaction.jta.platform.internal.JtaPlatformInitiator: HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2023-06-27 18:02:29,524 [main] org.springframework.orm.jpa.AbstractEntityManagerFactoryBean: Initialized JPA EntityManagerFactory for persistence unit 'default'
+2023-06-27 18:02:29,611 [main] org.springframework.core.annotation.AnnotationTypeMapping: Support for convention-based annotation attribute overrides is deprecated and will be removed in Spring Framework 6.1. Please annotate the following attributes in @org.hibernate.validator.constraints.NotEmpty with appropriate @AliasFor declarations: [payload, groups, message]
+2023-06-27 18:02:29,611 [main] org.springframework.core.annotation.AnnotationTypeMapping: Support for convention-based annotation attribute overrides is deprecated and will be removed in Spring Framework 6.1. Please annotate the following attributes in @org.hibernate.validator.constraints.NotEmpty with appropriate @AliasFor declarations: [payload, groups, message]
+2023-06-27 18:02:29,929 [main] org.springframework.web.filter.GenericFilterBean: Filter 'jwtAuthenticationFilter' configured for use
+2023-06-27 18:02:29,930 [main] org.springframework.web.filter.GenericFilterBean: Filter 'loggingHttpFilterConfig' configured for use
+2023-06-27 18:02:30,102 [main] org.springframework.boot.autoconfigure.orm.jpa.JpaBaseConfiguration$JpaWebConfiguration: spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2023-06-27 18:02:30,321 [main] org.springframework.security.web.DefaultSecurityFilterChain: Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@1d5ec2ed, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@5e2ab1c, org.springframework.security.web.context.SecurityContextHolderFilter@318beab4, org.springframework.security.web.header.HeaderWriterFilter@24244ea, org.springframework.security.web.authentication.logout.LogoutFilter@75937998, com.turborvip.security.application.security.JwtAuthenticationFilter@6edb093f, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@578483bd, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@38447073, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@37596b44, org.springframework.security.web.session.SessionManagementFilter@6a9c848, org.springframework.security.web.access.ExceptionTranslationFilter@552b7481, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@2a4a95c4]
+2023-06-27 18:02:30,470 [main] org.apache.juli.logging.DirectJDKLog: Starting ProtocolHandler ["http-nio-8077"]
+2023-06-27 18:02:30,493 [main] org.springframework.boot.web.embedded.tomcat.TomcatWebServer: Tomcat started on port(s): 8077 (http) with context path ''
+2023-06-27 18:02:30,504 [main] org.springframework.boot.StartupInfoLogger: Started Application in 3.409 seconds (process running for 4.021)
