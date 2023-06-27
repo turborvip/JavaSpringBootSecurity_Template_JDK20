@@ -6,7 +6,7 @@ target/
 !**/src/main/java/com/turborvip/security/application/configuration/env/
 
 ### Log ###
-!**/logs/
+logs/
 
 ### IntelliJ IDEA ###
 .idea/modules.xml
