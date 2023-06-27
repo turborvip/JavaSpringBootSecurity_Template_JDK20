@@ -3,10 +3,10 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 !**/src/main/resources/application.properties
-!**/src/main/java/com/turborvip/security/application/configuration/env
+!**/src/main/java/com/turborvip/security/application/configuration/env/
 
 ### Log ###
-logs
+!**/logs/
 
 ### IntelliJ IDEA ###
 .idea/modules.xml
