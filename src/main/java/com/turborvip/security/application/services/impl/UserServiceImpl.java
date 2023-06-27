@@ -19,7 +19,6 @@ import java.util.Optional;
 @Service
 @AllArgsConstructor
 @Transactional
-@Slf4j
 public class UserServiceImpl implements UserService {
 
     @Autowired
@@ -49,6 +48,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void addToUser(String username, String role_name) {
+
         User user = userRepository.findByUsername(username).get();
         Role role = roleRepository.findRoleByRoleName(EnumRole.valueOf(role_name));
 

@@ -1,16 +1,16 @@
-package com.turborvip.security.application.config;
+package com.turborvip.security.application.configuration;
 
-import com.turborvip.security.application.constants.EnumRole;
 import com.turborvip.security.application.repositories.UserRepository;
 import com.turborvip.security.application.services.UserService;
-import com.turborvip.security.domain.entity.Role;
-import com.turborvip.security.domain.entity.User;
-import jakarta.servlet.http.HttpServletRequest;
+import com.zaxxer.hikari.HikariDataSource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
+import org.springframework.scheduling.TaskScheduler;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -27,10 +27,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Date;
-import java.util.HashSet;
 
 @Configuration
+@EnableScheduling
 @RequiredArgsConstructor
 public class ApplicationConfig {
     private final UserRepository userRepository;
@@ -78,8 +77,11 @@ public class ApplicationConfig {
             User superAdminCreated = userService.findById(superAdmin.getId()).orElse(null);
 
             user.setCreateBy(superAdminCreated);
+            user.setUpdateBy(superAdminCreated);
             admin.setCreateBy(superAdminCreated);
+            admin.setUpdateBy(superAdminCreated);
             manager.setCreateBy(superAdminCreated);
+            manager.setUpdateBy(superAdminCreated);
 
             userService.create(user, request);
             userService.create(admin, request);
@@ -112,5 +114,12 @@ public class ApplicationConfig {
                         .allowedOrigins("https://localhost:8077");
             }
         };
+    }
+
+    @Bean
+    public TaskScheduler taskScheduler() {
+        final ThreadPoolTaskScheduler scheduler = new ThreadPoolTaskScheduler();
+        scheduler.setPoolSize(10);
+        return scheduler;
     }
 }

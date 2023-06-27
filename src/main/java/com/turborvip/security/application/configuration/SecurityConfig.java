@@ -1,6 +1,7 @@
-package com.turborvip.security.application.config;
+package com.turborvip.security.application.configuration;
 
 import com.turborvip.security.application.constants.EnumRole;
+import com.turborvip.security.application.security.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,13 +26,14 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(STATELESS);
         http.authorizeRequests()
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .requestMatchers("/api/v1/both/test").permitAll()
                 .requestMatchers("/api/v1/auth/**").permitAll()
-                .requestMatchers("/api/v1/demo-auth").hasAnyAuthority(EnumRole.ROLE_USER.toString())
+                .requestMatchers("/api/v1/user/**").hasAnyAuthority(EnumRole.ROLE_USER.toString())
+                .requestMatchers("/api/v1/admin/**").hasAnyAuthority(EnumRole.ROLE_SUPER_ADMIN.toString(),EnumRole.ROLE_ADMIN.toString())
+                .requestMatchers("/api/v1/manager/**").hasAnyAuthority(EnumRole.ROLE_SUPER_ADMIN.toString(),EnumRole.ROLE_ADMIN.toString(),EnumRole.MANAGER.toString())
                 .and()
                 .csrf().disable()
                 .authorizeRequests()

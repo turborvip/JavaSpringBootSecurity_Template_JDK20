@@ -2,9 +2,7 @@ package com.turborvip.security.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.turborvip.security.domain.entity.base.AbstractBase;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -38,4 +36,8 @@ public class Token extends AbstractBase {
     @NotEmpty(message = "Expire time must not be empty")
     @Column(name = "expires_at")
     private Timestamp expiresAt;
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
+    @JoinColumn(name = "user_device_id")
+    private UserDevice userDevice;
 }

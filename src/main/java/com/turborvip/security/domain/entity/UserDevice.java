@@ -19,11 +19,6 @@ import java.util.List;
 @Table(name = "user_device")
 public class UserDevice extends AbstractBase {
 
-    @NotEmpty(message = "User must not be empty")
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id")
-    private User user;
-
     @NotEmpty(message = "Device id must not be empty")
     @Column(name = "device_id")
     private String deviceID;
@@ -44,7 +39,11 @@ public class UserDevice extends AbstractBase {
     @Column(name = "unlocked_at")
     private Timestamp unlockedAt;
 
-
-
-
+    public UserDevice( String deviceID, Timestamp lastLoginAt, Timestamp lockedAt, Timestamp lockedUntil, Timestamp unlockedAt) {
+        this.deviceID = deviceID;
+        this.lastLoginAt = lastLoginAt;
+        this.lockedAt = lockedAt;
+        this.lockedUntil = lockedUntil;
+        this.unlockedAt = unlockedAt;
+    }
 }
