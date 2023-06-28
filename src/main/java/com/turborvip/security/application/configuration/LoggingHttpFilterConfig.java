@@ -34,7 +34,6 @@ public class LoggingHttpFilterConfig extends OncePerRequestFilter {
         contentCachingRequestWrapper.getInputStream();
         LOGGER.info("HTTP Logs: \nMETHOD = {}; REQUEST_URI = {}; REQUEST_BODY = {};\nRESPONSE_CODE = {}; RESPONSE_BODY = {}; TIME_TAKEN = {}"
                 , request.getMethod(), request.getRequestURI(), requestBody, response.getStatus(), responseBody, timeTaken);
-
         contentCachingResponseWrapper.copyBodyToResponse();
     }
 

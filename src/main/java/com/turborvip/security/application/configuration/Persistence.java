@@ -2,7 +2,6 @@ package com.turborvip.security.application.configuration;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import com.zaxxer.hikari.pool.HikariPool;
 import jakarta.persistence.EntityManagerFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,19 +19,14 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Objects;
 import java.util.Properties;
 
 @Configuration
 @EnableTransactionManagement
-@PropertySource({
-        "classpath:application.properties"
-})
-@ComponentScan({
-        "com.turborvip.security"
-})
+@PropertySource({"classpath:application.properties"})
+@ComponentScan({"com.turborvip.security"})
 @EnableJpaRepositories(basePackages = "com.turborvip.security.application.repositories")
 @Slf4j
 public class Persistence {
@@ -60,9 +54,9 @@ public class Persistence {
         final Properties hibernateProperties = new Properties();
         hibernateProperties.setProperty("hibernate.hbm2ddl.auto", env.getProperty("hibernate.hbm2ddl.auto"));
         hibernateProperties.setProperty("hibernate.dialect", env.getProperty("hibernate.dialect"));
-        hibernateProperties.setProperty("hibernate.hbm2dll.create_namespaces",env.getProperty("hibernate.hbm2dll.create_namespaces"));
-        hibernateProperties.setProperty("hibernate.show_sql",env.getProperty("hibernate.showSQL"));
-        hibernateProperties.setProperty("hibernate.format_sql",env.getProperty("hibernate.formatSQL"));
+        hibernateProperties.setProperty("hibernate.hbm2dll.create_namespaces", env.getProperty("hibernate.hbm2dll.create_namespaces"));
+        hibernateProperties.setProperty("hibernate.show_sql", env.getProperty("hibernate.showSQL"));
+        hibernateProperties.setProperty("hibernate.format_sql", env.getProperty("hibernate.formatSQL"));
 //        hibernateProperties.setProperty("hibernate.cache.use_second_level_cache", env.getProperty("hibernate.cache.use_second_level_cache"));
 //        hibernateProperties.setProperty("hibernate.cache.use_query_cache", env.getProperty("hibernate.cache.use_query_cache"));
         // hibernateProperties.setProperty("hibernate.globally_quoted_identifiers", "true");
@@ -76,6 +70,7 @@ public class Persistence {
         hikariConfig.setUsername(env.getProperty("jdbc.user"));
         hikariConfig.setPassword(env.getProperty("jdbc.pass"));
         hikariConfig.setPoolName(env.getProperty("hikari.poolName"));
+        hikariConfig.setMaximumPoolSize(Integer.parseInt(Objects.requireNonNull(env.getProperty("hikari.maxPoolSize"))));
         // time which is calculator from not activity, after that time connection was move to pool!
         hikariConfig.setIdleTimeout(Long.parseLong(Objects.requireNonNull(env.getProperty("hikari.timeout"))));
         hikariConfig.setAutoCommit(Boolean.parseBoolean(env.getProperty("hikari.autoCommit")));
@@ -97,8 +92,11 @@ public class Persistence {
         return new PersistenceExceptionTranslationPostProcessor();
     }
 
-    public Connection getConnection() throws SQLException {
-        return hikariDataSource.getConnection();
+    @Bean
+    public void getConnection() throws SQLException {
+        log.info(String.valueOf(hikariDataSource.getConnection()));
+        log.info("Memory : {}", Runtime.getRuntime().totalMemory());
+        log.info("Processor : {}", Runtime.getRuntime().availableProcessors());
     }
 
 }
