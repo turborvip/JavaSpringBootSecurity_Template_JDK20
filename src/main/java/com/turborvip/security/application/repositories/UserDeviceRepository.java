@@ -11,7 +11,7 @@ import java.sql.Timestamp;
 import java.util.Optional;
 
 public interface UserDeviceRepository extends JpaRepository<UserDevice, Long> {
-    Optional<UserDevice>  findFirstByCreateBy_IdAndDeviceID(Long id, String deviceID);
+    Optional<UserDevice> findFirstByCreateBy_IdAndDeviceID(Long id, String deviceID);
 
     @Transactional
     @Modifying

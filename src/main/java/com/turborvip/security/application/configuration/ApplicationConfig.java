@@ -2,7 +2,7 @@ package com.turborvip.security.application.configuration;
 
 import com.turborvip.security.application.repositories.UserRepository;
 import com.turborvip.security.application.services.UserService;
-import com.zaxxer.hikari.HikariDataSource;
+import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -25,8 +25,13 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 
 @Configuration
 @EnableScheduling
@@ -91,6 +96,29 @@ public class ApplicationConfig {
             userService.addToUser("turborvipUser", String.valueOf(EnumRole.ROLE_USER));
             userService.addToUser("turborvipAdmin", String.valueOf(EnumRole.ROLE_ADMIN));
             userService.addToUser("turborvipManager", String.valueOf(EnumRole.MANAGER));*/
+
+//            KeyPairGenerator keyPairGen = KeyPairGenerator.getInstance("RSA");
+//            keyPairGen.initialize(4096);
+//            KeyPair pair = keyPairGen.generateKeyPair();
+//            PrivateKey privateKey = pair.getPrivate();
+//            PublicKey publicKey = pair.getPublic();
+//            System.out.println(privateKey.toString());
+//
+//            var a = Jwts.builder()
+//                    .setSubject("dat")
+//                    .setIssuedAt(new Date())
+//                    .setExpiration(new Date(new Date().getTime()+500000))
+//                    .signWith(SignatureAlgorithm.RS256, privateKey)
+//                    .compact();
+//
+//            System.out.println(a);
+//
+//            Claims claims = Jwts.parser()
+//                        .setSigningKey(publicKey)
+//                        .parseClaimsJws(a)
+//                        .getBody();
+//                String username = claims.getSubject();
+//            System.out.println(username);
         };
     }
 

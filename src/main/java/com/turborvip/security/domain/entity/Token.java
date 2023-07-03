@@ -30,8 +30,12 @@ public class Token extends AbstractBase {
     @Column(name = "type")
     private String type;
 
-    @Column(name = "value")
+    @Column(name = "value",columnDefinition="TEXT")
     private String value;
+
+    @NotEmpty(message = "Verify key must not be empty")
+    @Column(name="verify_key",columnDefinition="TEXT")
+    private  String verifyKey;
 
     @NotEmpty(message = "Expire time must not be empty")
     @Column(name = "expires_at")

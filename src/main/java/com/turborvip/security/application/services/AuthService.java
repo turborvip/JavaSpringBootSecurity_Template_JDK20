@@ -13,12 +13,14 @@ import com.turborvip.security.domain.entity.User;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
@@ -36,7 +38,7 @@ public class AuthService {
     private final TokenService tokenService;
     private final TokenRepository tokenRepository;
 
-    public AuthResponse authenticate(AuthRequest authRequest, HttpServletRequest request) {
+    public AuthResponse authenticate(AuthRequest authRequest, HttpServletRequest request) throws NoSuchAlgorithmException {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
         User user = userRepository.findByUsername(authRequest.getUsername()).orElse(null);
         List<Role> role = null;
@@ -52,8 +54,8 @@ public class AuthService {
 
         String DEVICE_ID = request.getHeader(USER_AGENT);
 
-        var jwtToken = jwtService.generateToken(user, tokenService, authorities, DEVICE_ID);
-        var jwtRefreshToken = jwtService.generateRefreshToken(user, tokenService, authorities, DEVICE_ID);
+        var jwtToken = jwtService.generateToken(user, authorities, DEVICE_ID);
+        var jwtRefreshToken = jwtService.generateRefreshToken(user, authorities, DEVICE_ID);
 
         return AuthResponse.builder().token(jwtToken).refreshToken(jwtRefreshToken).build();
     }

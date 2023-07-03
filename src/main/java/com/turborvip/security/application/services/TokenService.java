@@ -1,7 +1,6 @@
 package com.turborvip.security.application.services;
 
 import com.turborvip.security.domain.entity.Token;
-import jakarta.servlet.http.HttpServletRequest;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -14,12 +13,18 @@ public interface TokenService {
 
     void delete(Long tokenId);
 
-    int updateTokenWithValueExpiredTime(Long tokenId,Timestamp updateAt, String value, Timestamp expiredAt);
+//    int updateTokenWithValueExpiredTime(Long tokenId,Timestamp updateAt, String value, Timestamp expiredAt);
+
+    Token updateTokenWithValueExpiredTime(Token tokenOld,Timestamp updateAt, String value, Timestamp expiredAt,String verifyKey);
 
     List<Token> findListTokenByUserAndDevice(Long userId,String deviceId);
 
     Optional<Token> findFirstTokenByValue(String value);
 
+    Optional<Token> findTokenByValueAndType(String tokenValue, String type);
+
     List<Token> findListTokenExpired();
+
+    Optional<Token> findFirstAccessTokenByUserIdAndUserDevice(Long userId, String userDevice);
 
 }

@@ -27,8 +27,8 @@ public class TokenServiceImpl implements TokenService {
     }
 
     @Override
-    public Optional<Token> findFirstTokenByUserIdAndTypeAndDeviceId(Long userId, String type,String DeviceId) {
-        return tokenRepository.findFirstByCreateBy_IdAndTypeAndUserDevice_DeviceID(userId,type,DeviceId);
+    public Optional<Token> findFirstTokenByUserIdAndTypeAndDeviceId(Long userId, String type, String DeviceId) {
+        return tokenRepository.findFirstByCreateBy_IdAndTypeAndUserDevice_DeviceID(userId, type, DeviceId);
     }
 
     @Override
@@ -37,13 +37,17 @@ public class TokenServiceImpl implements TokenService {
     }
 
     @Override
-    public int updateTokenWithValueExpiredTime(Long tokenId,Timestamp updateAt, String value, Timestamp expiredAt) {
-        return tokenRepository.updateUpdateAtAndValueAndExpiresAtById(updateAt,value,expiredAt,tokenId);
+    public Token updateTokenWithValueExpiredTime(Token tokenOld, Timestamp updateAt, String value, Timestamp expiredAt, String verifyKey) {
+        tokenOld.setUpdateAt(updateAt);
+        tokenOld.setValue(value);
+        tokenOld.setExpiresAt(expiredAt);
+        tokenOld.setVerifyKey(verifyKey);
+        return tokenRepository.save(tokenOld);
     }
 
     @Override
     public List<Token> findListTokenByUserAndDevice(Long userId, String deviceId) {
-        return tokenRepository.findByCreateBy_IdAndUserDevice_DeviceID(userId,deviceId);
+        return tokenRepository.findByCreateBy_IdAndUserDevice_DeviceID(userId, deviceId);
     }
 
     @Override
@@ -52,8 +56,18 @@ public class TokenServiceImpl implements TokenService {
     }
 
     @Override
+    public Optional<Token> findTokenByValueAndType(String tokenValue, String type) {
+        return tokenRepository.findFirstByValueAndType(tokenValue,type);
+    }
+
+    @Override
     public List<Token> findListTokenExpired() {
         Timestamp now = new Timestamp(System.currentTimeMillis());
         return tokenRepository.findByExpiresAtLessThan(now);
+    }
+
+    @Override
+    public Optional<Token> findFirstAccessTokenByUserIdAndUserDevice(Long userId, String userDevice) {
+        return tokenRepository.findFirstByCreateBy_IdAndTypeAndUserDevice_DeviceID(userId,"Bear",userDevice);
     }
 }

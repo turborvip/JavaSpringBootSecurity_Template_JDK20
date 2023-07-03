@@ -10,10 +10,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 
 public interface AuthenticationResource {
     @PostMapping("/auth/login")
-    ResponseEntity<AuthResponse> login(@RequestBody AuthRequest authRequest, HttpServletRequest request);
+    ResponseEntity<AuthResponse> login(@RequestBody AuthRequest authRequest, HttpServletRequest request) throws NoSuchAlgorithmException;
 
     @PostMapping("/auth/logout")
     ResponseEntity<String> logout(Authentication authentication, HttpServletRequest request, HttpServletResponse response) throws IOException;

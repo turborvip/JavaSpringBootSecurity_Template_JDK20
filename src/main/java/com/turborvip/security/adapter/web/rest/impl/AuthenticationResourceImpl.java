@@ -14,6 +14,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 
 @RestApiV1
 @RequiredArgsConstructor
@@ -22,7 +23,7 @@ public class AuthenticationResourceImpl implements AuthenticationResource {
     private final AuthService authService;
 
     @Override
-    public ResponseEntity<AuthResponse> login(AuthRequest authRequest, HttpServletRequest request) {
+    public ResponseEntity<AuthResponse> login(AuthRequest authRequest, HttpServletRequest request) throws NoSuchAlgorithmException {
         return ResponseEntity.ok(authService.authenticate(authRequest, request));
     }
 

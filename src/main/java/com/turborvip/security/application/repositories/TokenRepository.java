@@ -13,16 +13,11 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface TokenRepository extends JpaRepository<Token,Long> {
+public interface TokenRepository extends JpaRepository<Token, Long> {
     Optional<Token> findFirstByCreateBy_IdAndTypeAndUserDevice_DeviceID(Long id, String type, String deviceID);
 
     @Override
     void deleteById(Long id);
-
-    @Transactional
-    @Modifying
-    @Query("update Token t set t.updateAt = :updateAt, t.value = :value, t.expiresAt = :expiresAt where t.id = :id")
-    int updateUpdateAtAndValueAndExpiresAtById(@Param("updateAt") Timestamp updateAt, @Param("value") String value, @Param("expiresAt") Timestamp expiresAt, @Param("id") Long id);
 
     List<Token> findByCreateBy_IdAndUserDevice_DeviceID(Long id, String deviceID);
 
@@ -30,8 +25,7 @@ public interface TokenRepository extends JpaRepository<Token,Long> {
 
     List<Token> findByExpiresAtLessThan(Timestamp expiresAt);
 
-
-
+    Optional<Token> findFirstByValueAndType(String value, String type);
 
 
 }
