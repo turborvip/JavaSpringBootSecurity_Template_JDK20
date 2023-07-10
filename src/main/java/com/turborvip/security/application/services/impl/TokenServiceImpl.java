@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -57,7 +59,7 @@ public class TokenServiceImpl implements TokenService {
 
     @Override
     public Optional<Token> findTokenByValueAndType(String tokenValue, String type) {
-        return tokenRepository.findFirstByValueAndType(tokenValue,type);
+        return tokenRepository.findFirstByValueAndType(tokenValue, type);
     }
 
     @Override
@@ -68,6 +70,20 @@ public class TokenServiceImpl implements TokenService {
 
     @Override
     public Optional<Token> findFirstAccessTokenByUserIdAndUserDevice(Long userId, String userDevice) {
-        return tokenRepository.findFirstByCreateBy_IdAndTypeAndUserDevice_DeviceID(userId,"Bear",userDevice);
+        return tokenRepository.findFirstByCreateBy_IdAndTypeAndUserDevice_DeviceID(userId, "Bear", userDevice);
+    }
+
+    @Override
+    public Optional<Token> findByRefreshTokenUsed(String refreshToken) {
+        Collection<ArrayList<String>> token = new ArrayList<>();
+        ArrayList<String> tokenList = new ArrayList<>();
+        tokenList.add(refreshToken);
+        token.add(tokenList);
+        return tokenRepository.findFirstByRefreshTokenUsedIn(token);
+    }
+
+    @Override
+    public List<Token> findByUserId(Long userId) {
+        return tokenRepository.findByCreateBy_Id(userId);
     }
 }

@@ -10,7 +10,9 @@ import lombok.Setter;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Getter
@@ -36,6 +38,9 @@ public class Token extends AbstractBase {
     @NotEmpty(message = "Verify key must not be empty")
     @Column(name="verify_key",columnDefinition="TEXT")
     private  String verifyKey;
+
+    @Column(name="refresh_token_used",columnDefinition="character varying[]")
+    private ArrayList<String> refreshTokenUsed;
 
     @NotEmpty(message = "Expire time must not be empty")
     @Column(name = "expires_at")

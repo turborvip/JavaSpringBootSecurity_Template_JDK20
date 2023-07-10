@@ -1,23 +1,28 @@
 package com.turborvip.security.application.services;
 
+import com.turborvip.security.adapter.web.base.VsResponseUtil;
+import com.turborvip.security.application.configuration.exception.ForbiddenException;
+import com.turborvip.security.application.repositories.RoleCusRepo;
 import com.turborvip.security.application.repositories.TokenRepository;
+import com.turborvip.security.application.response.AuthResponse;
 import com.turborvip.security.domain.entity.Token;
 import com.turborvip.security.domain.entity.User;
 import com.turborvip.security.domain.entity.UserDevice;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.SignatureException;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 
 import java.security.*;
 import java.sql.Timestamp;
 import java.util.*;
+
+import static com.turborvip.security.application.constants.DevMessageConstant.Common.REFRESH_TOKEN_FAIL;
+import static com.turborvip.security.application.constants.DevMessageConstant.Common.REFRESH_TOKEN_SUCCESS;
+
 
 @Service
 @RequiredArgsConstructor
@@ -33,9 +38,12 @@ public class JwtService {
     @Autowired
     private final TokenService tokenService;
 
+    @Autowired
+    private final RoleCusRepo roleCusRepo;
+
     private final UserDeviceService userDeviceService;
 
-    public String generateToken(User user, Collection<SimpleGrantedAuthority> authorities, String DEVICE_ID) throws NoSuchAlgorithmException {
+    public String generateToken(User user, List<String> roles, String DEVICE_ID) throws NoSuchAlgorithmException {
         // TODO generate secret key
         KeyPairGenerator keyPairGen = KeyPairGenerator.getInstance("RSA");
         keyPairGen.initialize(4096);
@@ -47,7 +55,7 @@ public class JwtService {
         // TODO generate jwt
         Timestamp now = new Timestamp(System.currentTimeMillis());
         Timestamp expiredTime = new Timestamp(System.currentTimeMillis() + dueTimeAccessToken * 1000);
-        String jwtGenerate = this.generateTokenUtil(user.getUsername(), authorities, privateKey, expiredTime);
+        String jwtGenerate = this.generateTokenUtil(user.getUsername(), roles, privateKey, expiredTime);
 
         // TODO check device
         UserDevice userDevice = userDeviceService.findDeviceByUserIdAndDeviceId(user.getId(), DEVICE_ID).orElse(null);
@@ -61,12 +69,12 @@ public class JwtService {
         }
 
         // TODO update or create token
-        Token tokenExisted = tokenService.findFirstTokenByUserIdAndTypeAndDeviceId(user.getId(), "Bear", DEVICE_ID).orElse(null);
+        Token tokenExisted = tokenService.findFirstTokenByUserIdAndTypeAndDeviceId(user.getId(), "Access", DEVICE_ID).orElse(null);
         if (tokenExisted != null) {
             // update value, publicKey, expiredTime, updateAt
             tokenService.updateTokenWithValueExpiredTime(tokenExisted, now, jwtGenerate, expiredTime, publicKeyString);
         } else {
-            Token token = new Token(null, null, "Bear", jwtGenerate, publicKeyString, expiredTime, userDevice);
+            Token token = new Token(null, null, "Access", jwtGenerate, publicKeyString, new ArrayList<>(), expiredTime, userDevice);
             token.setCreateBy(user);
             token.setUpdateBy(user);
             tokenService.create(token);
@@ -74,7 +82,7 @@ public class JwtService {
         return jwtGenerate;
     }
 
-    public String generateRefreshToken(User user, Collection<SimpleGrantedAuthority> authorities, String DEVICE_ID) throws NoSuchAlgorithmException {
+    public String generateRefreshToken(User user, List<String> roles, String DEVICE_ID) throws NoSuchAlgorithmException {
         // TODO generate secret key
         KeyPairGenerator keyPairGen = KeyPairGenerator.getInstance("RSA");
         keyPairGen.initialize(4096);
@@ -87,7 +95,7 @@ public class JwtService {
         Timestamp now = new Timestamp(System.currentTimeMillis());
         Timestamp expiredTime = new Timestamp(System.currentTimeMillis() + dueTimeRefreshToken * 1000);
 
-        String jwtGenerate = this.generateTokenUtil(user.getUsername(), authorities, privateKey, expiredTime);
+        String jwtGenerate = this.generateTokenUtil(user.getUsername(), roles, privateKey, expiredTime);
 
         // TODO check device
         UserDevice userDevice = userDeviceService.findDeviceByUserIdAndDeviceId(user.getId(), DEVICE_ID).orElse(null);
@@ -106,7 +114,7 @@ public class JwtService {
             // update value, publicKey, expiredTime, updateAt
             tokenService.updateTokenWithValueExpiredTime(tokenExisted, now, jwtGenerate, expiredTime, publicKeyString);
         } else {
-            Token token = new Token(null, null, "Refresh", jwtGenerate, publicKeyString, expiredTime, userDevice);
+            Token token = new Token(null, null, "Refresh", jwtGenerate, publicKeyString, new ArrayList<>(), expiredTime, userDevice);
             token.setCreateBy(user);
             token.setUpdateBy(user);
             tokenService.create(token);
@@ -114,9 +122,8 @@ public class JwtService {
         return jwtGenerate;
     }
 
-    public String generateTokenUtil(String username, Collection<SimpleGrantedAuthority> authorities, PrivateKey privateKey, Timestamp expiredTime) {
+    public String generateTokenUtil(String username, List<String> roles, PrivateKey privateKey, Timestamp expiredTime) {
         Claims claims = Jwts.claims();
-        List<String> roles = authorities.stream().map(GrantedAuthority::getAuthority).toList();
         claims.put("roles", roles);
         return Jwts.builder()
                 .setSubject(username)
@@ -145,20 +152,47 @@ public class JwtService {
         return false;
     }
 
-    public void generateTokenFromRefreshToken(HttpServletResponse response, Token refreshToken, String deviceID) {
+    public void generateTokenFromRefreshToken(String refreshToken, List<String> roles, String DEVICE_ID) {
+        /*
+            1. Check refresh token used in dbs
+            2. Check refresh token in dbs
+            3. Create token and refreshToken
+            4. Update
+         */
+
         try {
-            List<Token> listToken = new ArrayList<>();
-            Token refreshTokenDB = tokenService.findTokenByValueAndType(refreshToken.getValue(), refreshToken.getType())
-                    .orElseThrow(() -> new Exception("Don't have anything refresh token"));
-            if (refreshTokenDB != null) {
-                Token accessToken = tokenService.findFirstAccessTokenByUserIdAndUserDevice(refreshTokenDB.getCreateBy().getId(), refreshToken.getUserDevice().getDeviceID())
-                        .orElseThrow(() -> new Exception("Don't have any thing accessToken"));
-                listToken.add(refreshTokenDB);
-                listToken.add(accessToken);
-                listToken.forEach(tokenRepository::delete);
+            // 1. Abnormal : bat thuong
+            Token refreshTokenUsed = tokenService.findByRefreshTokenUsed(refreshToken).orElse(null);
+            System.out.println(refreshTokenUsed);
+            if (refreshTokenUsed != null) {
+                // Todo remove all token of userId
+                List<Token> listByUser = tokenService.findByUserId(refreshTokenUsed.getCreateBy().getId());
+                listByUser.forEach(tokenRepository::delete);
+
+                // back list
+                // send mail
+                throw new ForbiddenException("Some thing wrong happened ! Please re login ! ");
             }
+
+            // 2.
+            Token refreshTokenDB = tokenService.findTokenByValueAndType(refreshToken, "Refresh")
+                    .orElseThrow(() -> new Exception("Don't have anything refresh token"));
+
+            // 3. vs 4
+            // create token
+            String jwtToken = this.generateToken(refreshTokenDB.getCreateBy(), roles, DEVICE_ID);
+
+            //create refresh token
+            String jwtRefreshToken =  this.generateRefreshToken(refreshTokenDB.getCreateBy(), roles, DEVICE_ID);
+
+            var data = AuthResponse.builder().token(jwtToken).refreshToken(jwtRefreshToken).build();
+
+            VsResponseUtil.ok(REFRESH_TOKEN_SUCCESS, data);
+
         } catch (Exception exception) {
-            response.setHeader("error", exception.getMessage());
+            VsResponseUtil.ok(REFRESH_TOKEN_FAIL, null);
         }
     }
+
+
 }

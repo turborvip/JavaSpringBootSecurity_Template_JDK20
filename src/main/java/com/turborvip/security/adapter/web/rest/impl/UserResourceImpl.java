@@ -13,8 +13,9 @@ import org.springframework.http.ResponseEntity;
 @RequiredArgsConstructor
 public class UserResourceImpl implements UserResource {
     private final UserService userService;
+
     @Override
     public ResponseEntity<?> create(User user, HttpServletRequest request) {
-        return VsResponseUtil.ok(userService.create(user, request));
+        return VsResponseUtil.ok(null, userService.create(user, request), null);
     }
 }

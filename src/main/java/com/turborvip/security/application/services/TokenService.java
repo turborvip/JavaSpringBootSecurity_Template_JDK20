@@ -27,4 +27,8 @@ public interface TokenService {
 
     Optional<Token> findFirstAccessTokenByUserIdAndUserDevice(Long userId, String userDevice);
 
+    Optional<Token> findByRefreshTokenUsed(String refreshToken);
+
+    List<Token> findByUserId(Long userId);
+
 }

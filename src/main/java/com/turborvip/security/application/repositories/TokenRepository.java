@@ -7,8 +7,11 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import org.w3c.dom.Text;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,5 +30,8 @@ public interface TokenRepository extends JpaRepository<Token, Long> {
 
     Optional<Token> findFirstByValueAndType(String value, String type);
 
+    Optional<Token> findFirstByRefreshTokenUsedIn(Collection<ArrayList<String>> refreshTokenUsed);
+
+    List<Token> findByCreateBy_Id(Long id);
 
 }

@@ -29,6 +29,7 @@ import java.security.spec.X509EncodedKeySpec;
 import java.util.*;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+import static org.springframework.http.HttpHeaders.USER_AGENT;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -36,9 +37,6 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RequiredArgsConstructor
 @PropertySource({"classpath:application.properties"})
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
-
-    @Value("${jwt_secret}")
-    private String SECRET_KEY;
 
     @Autowired
     private final TokenService tokenService;
@@ -49,6 +47,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String authorizationHeader = request.getHeader(AUTHORIZATION);
+        String DEVICE_ID = request.getHeader(USER_AGENT);
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             try {
                 // Todo find token in with value token in request
@@ -77,6 +76,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
 
                 filterChain.doFilter(request, response);
+
+                // check key of token
+                if(tokenDB.getType().equals("Refresh")){
+                    jwtService.generateTokenFromRefreshToken(token,roles,DEVICE_ID);
+                }
+
             } catch (Exception exception) {
                 response.setHeader("error", exception.getMessage());
                 response.setStatus(FORBIDDEN.value());

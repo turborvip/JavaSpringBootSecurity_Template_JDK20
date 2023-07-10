@@ -11,29 +11,40 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RestData<T> {
-    private RestStatus status;
     @JsonInclude(JsonInclude.Include.NON_NULL)//@JsonInclude : This property will include Json if it different null
     private String userMessage;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String devMessage;
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private T data;
+    @JsonInclude(JsonInclude.Include.NON_NULL)//@JsonInclude : This property will include Json if it different null
+    private String message;
 
-    public RestData(T data){
-        this.status = RestStatus.SUCCESS;
-        this.data = data;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private T metadata;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private T option;
+
+    public RestData(String userMessage, T data, T option) {
+        this.metadata = data;
+        this.option = option;
+        this.message = userMessage;
     }
-    public RestData(RestStatus status, String userMessage, T data) {
-        this.status = status;
-        this.userMessage = userMessage;
-        this.data = data;
+
+    public RestData( T data, T option) {
+        this.metadata = data;
+        this.option = option;
+
+    }  public RestData( T data) {
+        this.metadata = data;
     }
-    public static RestData<?> error(String userMessage , String devMessage) {
-        return new RestData<>(RestStatus.ERROR, userMessage, devMessage, null);
+
+    public static RestData<?> error(String userMessage, String devMessage) {
+        return new RestData<>( userMessage, devMessage, null, null, null);
     }
+
     public static RestData<?> error(String userMessage) {
-        return new RestData<>(RestStatus.ERROR, userMessage, null);
+        return new RestData<>(userMessage, null);
     }
 }

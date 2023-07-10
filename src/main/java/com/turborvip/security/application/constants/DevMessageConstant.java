@@ -7,6 +7,9 @@ public class DevMessageConstant {
         public static final String OBJECT_IS_EMPTY = "This object is empty ";
         public static final String LOGOUT = "Logout successfully";
         public static final String  LOGIN_FAIL= "Login fail, please check your username and password!";
+        public static final String LOGIN_SUCCESS= "Login successfully!";
+        public static final String REFRESH_TOKEN_SUCCESS= "Refresh token successfully!";
+        public static final String REFRESH_TOKEN_FAIL= "Refresh token fail and you can re-login to use!";
         public static final String WRITE_DATA_SUCCESS = "Write data to excel file success";
         public static final String WRITE_DATA_FAILED = "Write data to excel file success";
         public static final String SEARCH_ONLY_FIELD = "You can only search on one field";
