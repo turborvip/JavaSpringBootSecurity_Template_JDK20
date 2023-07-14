@@ -15,7 +15,7 @@ public interface TokenService {
 
 //    int updateTokenWithValueExpiredTime(Long tokenId,Timestamp updateAt, String value, Timestamp expiredAt);
 
-    Token updateTokenWithValueExpiredTime(Token tokenOld,Timestamp updateAt, String value, Timestamp expiredAt,String verifyKey);
+    Token updateTokenWithValueExpiredTime(Token tokenOld,Timestamp updateAt, String value, Timestamp expiredAt,String verifyKey,String tokenUsed);
 
     List<Token> findListTokenByUserAndDevice(Long userId,String deviceId);
 

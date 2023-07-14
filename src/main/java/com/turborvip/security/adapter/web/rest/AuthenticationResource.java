@@ -23,5 +23,5 @@ public interface AuthenticationResource {
     ResponseEntity<String> testAuth();
 
     @PostMapping("/auth/refresh-token")
-    ResponseEntity<RestData<?>> refreshToken();
+    ResponseEntity<RestData<?>> refreshToken(HttpServletRequest request);
 }

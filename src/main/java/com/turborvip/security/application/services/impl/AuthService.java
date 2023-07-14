@@ -1,4 +1,4 @@
-package com.turborvip.security.application.services;
+package com.turborvip.security.application.services.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.turborvip.security.adapter.web.base.RestData;
@@ -10,6 +10,7 @@ import com.turborvip.security.application.response.AuthResponse;
 import com.turborvip.security.application.constants.EnumRole;
 import com.turborvip.security.application.repositories.RoleCusRepo;
 import com.turborvip.security.application.repositories.UserRepository;
+import com.turborvip.security.application.services.TokenService;
 import com.turborvip.security.domain.entity.Role;
 import com.turborvip.security.domain.entity.Token;
 import com.turborvip.security.domain.entity.User;
@@ -65,7 +66,7 @@ public class AuthService {
 
 
             var jwtToken = jwtService.generateToken(user, roles, DEVICE_ID);
-            var jwtRefreshToken = jwtService.generateRefreshToken(user, roles, DEVICE_ID);
+            var jwtRefreshToken = jwtService.generateRefreshToken(user, roles, DEVICE_ID, null);
             var data = AuthResponse.builder().token(jwtToken).refreshToken(jwtRefreshToken).build();
 
             return VsResponseUtil.ok(LOGIN_SUCCESS, data);

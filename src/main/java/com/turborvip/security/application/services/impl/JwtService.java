@@ -1,10 +1,12 @@
-package com.turborvip.security.application.services;
+package com.turborvip.security.application.services.impl;
 
-import com.turborvip.security.adapter.web.base.VsResponseUtil;
 import com.turborvip.security.application.configuration.exception.ForbiddenException;
 import com.turborvip.security.application.repositories.RoleCusRepo;
 import com.turborvip.security.application.repositories.TokenRepository;
 import com.turborvip.security.application.response.AuthResponse;
+import com.turborvip.security.application.services.TokenService;
+import com.turborvip.security.application.services.UserDeviceService;
+import com.turborvip.security.domain.entity.Role;
 import com.turborvip.security.domain.entity.Token;
 import com.turborvip.security.domain.entity.User;
 import com.turborvip.security.domain.entity.UserDevice;
@@ -19,9 +21,6 @@ import org.springframework.stereotype.Service;
 import java.security.*;
 import java.sql.Timestamp;
 import java.util.*;
-
-import static com.turborvip.security.application.constants.DevMessageConstant.Common.REFRESH_TOKEN_FAIL;
-import static com.turborvip.security.application.constants.DevMessageConstant.Common.REFRESH_TOKEN_SUCCESS;
 
 
 @Service
@@ -72,7 +71,7 @@ public class JwtService {
         Token tokenExisted = tokenService.findFirstTokenByUserIdAndTypeAndDeviceId(user.getId(), "Access", DEVICE_ID).orElse(null);
         if (tokenExisted != null) {
             // update value, publicKey, expiredTime, updateAt
-            tokenService.updateTokenWithValueExpiredTime(tokenExisted, now, jwtGenerate, expiredTime, publicKeyString);
+            tokenService.updateTokenWithValueExpiredTime(tokenExisted, now, jwtGenerate, expiredTime, publicKeyString, null);
         } else {
             Token token = new Token(null, null, "Access", jwtGenerate, publicKeyString, new ArrayList<>(), expiredTime, userDevice);
             token.setCreateBy(user);
@@ -82,7 +81,7 @@ public class JwtService {
         return jwtGenerate;
     }
 
-    public String generateRefreshToken(User user, List<String> roles, String DEVICE_ID) throws NoSuchAlgorithmException {
+    public String generateRefreshToken(User user, List<String> roles, String DEVICE_ID, String refreshToken) throws NoSuchAlgorithmException {
         // TODO generate secret key
         KeyPairGenerator keyPairGen = KeyPairGenerator.getInstance("RSA");
         keyPairGen.initialize(4096);
@@ -90,7 +89,6 @@ public class JwtService {
         PrivateKey privateKey = pair.getPrivate();
         PublicKey publicKey = pair.getPublic();
         String publicKeyString = Base64.getEncoder().encodeToString(publicKey.getEncoded());
-
         // TODO generate jwt
         Timestamp now = new Timestamp(System.currentTimeMillis());
         Timestamp expiredTime = new Timestamp(System.currentTimeMillis() + dueTimeRefreshToken * 1000);
@@ -112,7 +110,7 @@ public class JwtService {
         Token tokenExisted = tokenService.findFirstTokenByUserIdAndTypeAndDeviceId(user.getId(), "Refresh", DEVICE_ID).orElse(null);
         if (tokenExisted != null) {
             // update value, publicKey, expiredTime, updateAt
-            tokenService.updateTokenWithValueExpiredTime(tokenExisted, now, jwtGenerate, expiredTime, publicKeyString);
+            tokenService.updateTokenWithValueExpiredTime(tokenExisted, now, jwtGenerate, expiredTime, publicKeyString, refreshToken);
         } else {
             Token token = new Token(null, null, "Refresh", jwtGenerate, publicKeyString, new ArrayList<>(), expiredTime, userDevice);
             token.setCreateBy(user);
@@ -152,7 +150,7 @@ public class JwtService {
         return false;
     }
 
-    public void generateTokenFromRefreshToken(String refreshToken, List<String> roles, String DEVICE_ID) {
+    public AuthResponse generateTokenFromRefreshToken(String refreshToken, String DEVICE_ID) throws Exception {
         /*
             1. Check refresh token used in dbs
             2. Check refresh token in dbs
@@ -161,38 +159,30 @@ public class JwtService {
          */
 
         try {
-            // 1. Abnormal : bat thuong
-            Token refreshTokenUsed = tokenService.findByRefreshTokenUsed(refreshToken).orElse(null);
-            System.out.println(refreshTokenUsed);
-            if (refreshTokenUsed != null) {
-                // Todo remove all token of userId
-                List<Token> listByUser = tokenService.findByUserId(refreshTokenUsed.getCreateBy().getId());
-                listByUser.forEach(tokenRepository::delete);
+            // 1. Abnormal : bat thuong in JWTAuthenticationFilter
 
-                // back list
-                // send mail
-                throw new ForbiddenException("Some thing wrong happened ! Please re login ! ");
-            }
 
             // 2.
             Token refreshTokenDB = tokenService.findTokenByValueAndType(refreshToken, "Refresh")
                     .orElseThrow(() -> new Exception("Don't have anything refresh token"));
-
-            // 3. vs 4
+            Set<Role> roles = refreshTokenDB.getCreateBy().getRoles();
+            List<String> roleList = new ArrayList<>();
+            roles.forEach(role -> roleList.add(role.toString()));
+            // 3.
             // create token
-            String jwtToken = this.generateToken(refreshTokenDB.getCreateBy(), roles, DEVICE_ID);
+            String jwtToken = this.generateToken(refreshTokenDB.getCreateBy(), roleList, DEVICE_ID);
 
             //create refresh token
-            String jwtRefreshToken =  this.generateRefreshToken(refreshTokenDB.getCreateBy(), roles, DEVICE_ID);
+            String jwtRefreshToken = this.generateRefreshToken(refreshTokenDB.getCreateBy(), roleList, DEVICE_ID, refreshToken);
 
-            var data = AuthResponse.builder().token(jwtToken).refreshToken(jwtRefreshToken).build();
+            // 4.
 
-            VsResponseUtil.ok(REFRESH_TOKEN_SUCCESS, data);
+
+            return AuthResponse.builder().token(jwtToken).refreshToken(jwtRefreshToken).build();
 
         } catch (Exception exception) {
-            VsResponseUtil.ok(REFRESH_TOKEN_FAIL, null);
+            throw new Exception(exception);
         }
     }
-
 
 }

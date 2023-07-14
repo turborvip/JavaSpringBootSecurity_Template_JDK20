@@ -1,5 +1,6 @@
 package com.turborvip.security.application.repositories;
 
+import com.turborvip.security.domain.entity.Role;
 import com.turborvip.security.domain.entity.Token;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -33,5 +34,7 @@ public interface TokenRepository extends JpaRepository<Token, Long> {
     Optional<Token> findFirstByRefreshTokenUsedIn(Collection<ArrayList<String>> refreshTokenUsed);
 
     List<Token> findByCreateBy_Id(Long id);
+
+
 
 }

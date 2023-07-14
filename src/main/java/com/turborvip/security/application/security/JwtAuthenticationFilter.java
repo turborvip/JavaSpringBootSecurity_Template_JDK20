@@ -1,7 +1,10 @@
 package com.turborvip.security.application.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.turborvip.security.application.services.JwtService;
+import com.turborvip.security.application.configuration.exception.ForbiddenException;
+import com.turborvip.security.application.repositories.TokenRepository;
+import com.turborvip.security.application.services.impl.GMailerServiceImpl;
+import com.turborvip.security.application.services.impl.JwtService;
 import com.turborvip.security.application.services.TokenService;
 import com.turborvip.security.domain.entity.Token;
 import io.jsonwebtoken.Claims;
@@ -12,7 +15,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -29,7 +31,6 @@ import java.security.spec.X509EncodedKeySpec;
 import java.util.*;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
-import static org.springframework.http.HttpHeaders.USER_AGENT;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -44,14 +45,31 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Autowired
     private final JwtService jwtService;
 
+    @Autowired
+    private final TokenRepository tokenRepository;
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String authorizationHeader = request.getHeader(AUTHORIZATION);
-        String DEVICE_ID = request.getHeader(USER_AGENT);
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             try {
                 // Todo find token in with value token in request
+
                 String token = authorizationHeader.substring("Bearer " .length());
+
+                // 1. Abnormal : bat thuong
+                Token refreshTokenUsed = tokenService.findByRefreshTokenUsed(token).orElse(null);
+                if (refreshTokenUsed != null) {
+                    // Todo remove all token of userId
+                    List<Token> listByUser = tokenService.findByUserId(refreshTokenUsed.getCreateBy().getId());
+                    listByUser.forEach(tokenRepository::delete);
+                    // back list
+
+                    // send mail
+                    new GMailerServiceImpl().sendEmail(refreshTokenUsed.getCreateBy().getEmail(),"Hello world","Hello world turborvip!");
+                    throw new ForbiddenException("Some thing wrong happened ! Please re login ! ");
+                }
+
                 Token tokenDB = tokenService.findFirstTokenByValue(token).orElseThrow(() -> new Exception("Don't find any token"));
                 String publicKeyEncoded = tokenDB.getVerifyKey();
                 PublicKey publicKey = generatePublicKey(publicKeyEncoded);
@@ -74,14 +92,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(username, null, authorities);
                 SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
-
                 filterChain.doFilter(request, response);
-
-                // check key of token
-                if(tokenDB.getType().equals("Refresh")){
-                    jwtService.generateTokenFromRefreshToken(token,roles,DEVICE_ID);
-                }
-
             } catch (Exception exception) {
                 response.setHeader("error", exception.getMessage());
                 response.setStatus(FORBIDDEN.value());

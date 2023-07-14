@@ -39,11 +39,16 @@ public class TokenServiceImpl implements TokenService {
     }
 
     @Override
-    public Token updateTokenWithValueExpiredTime(Token tokenOld, Timestamp updateAt, String value, Timestamp expiredAt, String verifyKey) {
+    public Token updateTokenWithValueExpiredTime(Token tokenOld, Timestamp updateAt, String value, Timestamp expiredAt, String verifyKey, String tokenUsed) {
         tokenOld.setUpdateAt(updateAt);
         tokenOld.setValue(value);
         tokenOld.setExpiresAt(expiredAt);
         tokenOld.setVerifyKey(verifyKey);
+        if (tokenUsed != null) {
+            ArrayList<String> tokenUsedDB = tokenOld.getRefreshTokenUsed();
+            tokenUsedDB.add(tokenUsed);
+            tokenOld.setRefreshTokenUsed(tokenUsedDB);
+        }
         return tokenRepository.save(tokenOld);
     }
 

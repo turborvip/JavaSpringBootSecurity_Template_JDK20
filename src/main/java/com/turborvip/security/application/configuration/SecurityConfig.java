@@ -32,7 +32,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/v1/both/**").permitAll()
                 .requestMatchers(HttpMethod.POST,"/api/v1/login").permitAll()
                 .requestMatchers(HttpMethod.POST,"/api/v1/logout").permitAll()
-                .requestMatchers("/api/v1/auth/**").hasAnyAuthority(EnumRole.ROLE_SUPER_ADMIN.toString(),EnumRole.ROLE_ADMIN.toString(),EnumRole.MANAGER.toString())
+                .requestMatchers("/api/v1/auth/**").hasAnyAuthority(EnumRole.ROLE_USER.toString(),EnumRole.ROLE_SUPER_ADMIN.toString(),EnumRole.ROLE_ADMIN.toString(),EnumRole.MANAGER.toString())
                 .requestMatchers("/api/v1/user/**").hasAnyAuthority(EnumRole.ROLE_USER.toString())
                 .requestMatchers("/api/v1/admin/**").hasAnyAuthority(EnumRole.ROLE_SUPER_ADMIN.toString(),EnumRole.ROLE_ADMIN.toString())
                 .requestMatchers("/api/v1/manager/**").hasAnyAuthority(EnumRole.ROLE_SUPER_ADMIN.toString(),EnumRole.ROLE_ADMIN.toString(),EnumRole.MANAGER.toString())
