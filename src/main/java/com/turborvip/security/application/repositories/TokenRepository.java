@@ -1,14 +1,11 @@
 package com.turborvip.security.application.repositories;
 
-import com.turborvip.security.domain.entity.Role;
 import com.turborvip.security.domain.entity.Token;
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
-import org.w3c.dom.Text;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -31,7 +28,13 @@ public interface TokenRepository extends JpaRepository<Token, Long> {
 
     Optional<Token> findFirstByValueAndType(String value, String type);
 
-    Optional<Token> findFirstByRefreshTokenUsedIn(Collection<ArrayList<String>> refreshTokenUsed);
+    @Transactional
+    @Query(value = "select * from token.tokens where :refreshToken = ANY(token.tokens.refresh_token_used)",nativeQuery = true)
+    Optional<Token> findFirstByRefreshTokenUsedContains(@Param("refreshToken") String refreshToken);
+
+//    Optional<Token> findFirstByRefreshTokenUsedContains(String refreshTokenUsed);
+
+
 
     List<Token> findByCreateBy_Id(Long id);
 

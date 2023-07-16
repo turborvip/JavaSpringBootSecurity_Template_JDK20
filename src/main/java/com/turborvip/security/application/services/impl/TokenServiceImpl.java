@@ -84,7 +84,7 @@ public class TokenServiceImpl implements TokenService {
         ArrayList<String> tokenList = new ArrayList<>();
         tokenList.add(refreshToken);
         token.add(tokenList);
-        return tokenRepository.findFirstByRefreshTokenUsedIn(token);
+        return tokenRepository.findFirstByRefreshTokenUsedContains(refreshToken);
     }
 
     @Override

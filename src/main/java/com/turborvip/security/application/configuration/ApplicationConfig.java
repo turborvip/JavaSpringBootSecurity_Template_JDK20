@@ -1,8 +1,12 @@
 package com.turborvip.security.application.configuration;
 
+import com.turborvip.security.application.constants.EnumRole;
 import com.turborvip.security.application.repositories.UserRepository;
 import com.turborvip.security.application.services.UserService;
+import com.turborvip.security.domain.entity.Role;
+import com.turborvip.security.domain.entity.User;
 import io.jsonwebtoken.*;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -32,6 +36,7 @@ import java.security.PublicKey;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 
 @Configuration
 @EnableScheduling
@@ -73,10 +78,10 @@ public class ApplicationConfig {
             Date now = new Date();
 
             HttpServletRequest request = null;
-            User superAdmin = new User("TurborvipSuperAdmin", "turborvipSuperAdmin", "123456a", null, now, null, null, null, null, new HashSet<>());
-            User user = new User("TurborvipUser", "turborvipUser", "123456a", null, now, null, null, null, null, new HashSet<>());
-            User admin = new User("TurborvipAdmin", "turborvipAdmin", "123456a", null, now, null, null, null, null, new HashSet<>());
-            User manager = new User("TurborvipManager", "turborvipManager", "123456a", null, now, null, null, null, null, new HashSet<>());
+            User superAdmin = new User("TurborvipSuperAdmin", "turborvipSuperAdmin", "123456a", "turborvip@gmail.com", now, null, null, null, null, new HashSet<>());
+            User user = new User("TurborvipUser", "turborvipUser", "123456a", "turborvip@gmail.com", now, null, null, null, null, new HashSet<>());
+            User admin = new User("TurborvipAdmin", "turborvipAdmin", "123456a", "turborvip@gmail.com", now, null, null, null, null, new HashSet<>());
+            User manager = new User("TurborvipManager", "turborvipManager", "123456a", "turborvip@gmail.com", now, null, null, null, null, new HashSet<>());
 
             userService.create(superAdmin, request);
             User superAdminCreated = userService.findById(superAdmin.getId()).orElse(null);
@@ -97,28 +102,6 @@ public class ApplicationConfig {
             userService.addToUser("turborvipAdmin", String.valueOf(EnumRole.ROLE_ADMIN));
             userService.addToUser("turborvipManager", String.valueOf(EnumRole.MANAGER));*/
 
-//            KeyPairGenerator keyPairGen = KeyPairGenerator.getInstance("RSA");
-//            keyPairGen.initialize(4096);
-//            KeyPair pair = keyPairGen.generateKeyPair();
-//            PrivateKey privateKey = pair.getPrivate();
-//            PublicKey publicKey = pair.getPublic();
-//            System.out.println(privateKey.toString());
-//
-//            var a = Jwts.builder()
-//                    .setSubject("dat")
-//                    .setIssuedAt(new Date())
-//                    .setExpiration(new Date(new Date().getTime()+500000))
-//                    .signWith(SignatureAlgorithm.RS256, privateKey)
-//                    .compact();
-//
-//            System.out.println(a);
-//
-//            Claims claims = Jwts.parser()
-//                        .setSigningKey(publicKey)
-//                        .parseClaimsJws(a)
-//                        .getBody();
-//                String username = claims.getSubject();
-//            System.out.println(username);
         };
     }
 

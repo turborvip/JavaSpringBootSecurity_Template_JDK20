@@ -39,14 +39,14 @@ public class Token extends AbstractBase {
     @Column(name="verify_key",columnDefinition="TEXT")
     private  String verifyKey;
 
-    @Column(name="refresh_token_used",columnDefinition="character varying[]")
+    @Column(name="refresh_token_used",columnDefinition="TEXT[]")
     private ArrayList<String> refreshTokenUsed;
 
     @NotEmpty(message = "Expire time must not be empty")
     @Column(name = "expires_at")
     private Timestamp expiresAt;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
     @JoinColumn(name = "user_device_id")
     private UserDevice userDevice;
 }

@@ -1,6 +1,7 @@
 package com.turborvip.security.application.services;
 
 import com.turborvip.security.domain.entity.Token;
+import jakarta.transaction.Transactional;
 
 import java.sql.Timestamp;
 import java.util.List;

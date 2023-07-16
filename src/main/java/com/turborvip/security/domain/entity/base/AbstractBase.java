@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.turborvip.security.domain.entity.User;
 import jakarta.persistence.*;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -36,7 +37,7 @@ public abstract class AbstractBase implements Serializable {
     protected Timestamp createAt;
 
     @CreatedBy
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
     @JoinColumn(name = "create_by", referencedColumnName = "id")
     @JsonIgnore
     private User createBy;
@@ -46,7 +47,7 @@ public abstract class AbstractBase implements Serializable {
     protected Timestamp updateAt;
 
     @LastModifiedBy
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
     @JoinColumn(name = "update_by", referencedColumnName = "id")
     @JsonIgnore
     private User updateBy;

@@ -3,6 +3,7 @@ package com.turborvip.security.application.security;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.turborvip.security.application.configuration.exception.ForbiddenException;
 import com.turborvip.security.application.repositories.TokenRepository;
+import com.turborvip.security.application.services.GMailerService;
 import com.turborvip.security.application.services.impl.GMailerServiceImpl;
 import com.turborvip.security.application.services.impl.JwtService;
 import com.turborvip.security.application.services.TokenService;
@@ -48,25 +49,31 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Autowired
     private final TokenRepository tokenRepository;
 
+    @Autowired
+    private final GMailerService gMailerService;
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String authorizationHeader = request.getHeader(AUTHORIZATION);
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             try {
                 // Todo find token in with value token in request
-
                 String token = authorizationHeader.substring("Bearer " .length());
 
                 // 1. Abnormal : bat thuong
                 Token refreshTokenUsed = tokenService.findByRefreshTokenUsed(token).orElse(null);
                 if (refreshTokenUsed != null) {
+                    Token refreshTokenUsedBD = tokenService.findFirstTokenByValue(refreshTokenUsed.getValue()).orElseThrow(() -> new Exception("Don't find token"));
                     // Todo remove all token of userId
                     List<Token> listByUser = tokenService.findByUserId(refreshTokenUsed.getCreateBy().getId());
-                    listByUser.forEach(tokenRepository::delete);
                     // back list
 
                     // send mail
-                    new GMailerServiceImpl().sendEmail(refreshTokenUsed.getCreateBy().getEmail(),"Hello world","Hello world turborvip!");
+                    new GMailerServiceImpl().sendEmail(refreshTokenUsedBD.getCreateBy().getEmail(),
+                            "Warning warning !!! Turborvip app",
+                            "Another try attach your account you should change password now!");
+
+                    listByUser.forEach(tokenRepository::delete);
                     throw new ForbiddenException("Some thing wrong happened ! Please re login ! ");
                 }
 
@@ -84,6 +91,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                         .parseClaimsJws(token)
                         .getBody();
                 String username = claims.getSubject();
+                System.out.println(username);
                 List<String> roles = claims.get("roles", List.class);
                 Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
                 roles.forEach(role -> {
