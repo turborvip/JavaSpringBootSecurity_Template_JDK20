@@ -101,7 +101,7 @@ public class ApplicationConfig {
             userService.addToUser("turborvipUser", String.valueOf(EnumRole.ROLE_USER));
             userService.addToUser("turborvipAdmin", String.valueOf(EnumRole.ROLE_ADMIN));
             userService.addToUser("turborvipManager", String.valueOf(EnumRole.MANAGER));*/
-
+            //test
         };
     }
 
